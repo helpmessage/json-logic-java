@@ -1,14 +1,14 @@
 package io.github.jamsesso.jsonlogic;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import io.github.jamsesso.jsonlogic.utils.JsonValueExtractor;
 
 import static io.github.jamsesso.jsonlogic.FixtureTests.readFixtures;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ErrorFixtureTests {
   private static final List<ErrorFixture> FIXTURES = readFixtures("error-fixtures.json", ErrorFixture::fromArray);
@@ -39,7 +39,7 @@ public class ErrorFixtureTests {
         exception.getMessage(), exception.getJsonPath());
     }
 
-    Assert.assertEquals(String.format("%d/%d test failures!", failures.size(), FIXTURES.size()), 0, failures.size());
+    assertEquals(0, failures.size());
   }
 
   private static class ErrorFixture {
@@ -48,15 +48,15 @@ public class ErrorFixtureTests {
     private final String expectedPath;
     private final String expectedError;
 
-    private ErrorFixture(String json, JsonElement data, String expectedPath, String expectedError) {
+    private ErrorFixture(String json, JsonNode data, String expectedPath, String expectedError) {
       this.json = json;
       this.data = JsonValueExtractor.extract(data);
       this.expectedPath = expectedPath;
       this.expectedError = expectedError;
     }
 
-    public static ErrorFixture fromArray(JsonArray array) {
-      return new ErrorFixture(array.get(0).toString(), array.get(1), array.get(2).getAsString(), array.get(3).getAsString());
+    public static ErrorFixture fromArray(ArrayNode array) {
+      return new ErrorFixture(array.get(0).toString(), array.get(1), array.get(2).asText(), array.get(3).asText());
     }
 
     String getJson() {
