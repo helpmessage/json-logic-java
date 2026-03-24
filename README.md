@@ -46,6 +46,18 @@ String result = (String) jsonLogic.apply("{\"greet\": [\"Sam\"]}", null);
 assert "Hello, Sam!".equals(result);
 ```
 
+You can add alias of an operator:
+```java
+// Register an alias operation.
+jsonLogic.addOperation(AliasExpression.create("equals", EqualityExpression.INSTANCE));
+
+// Evaluate the result.
+assertEquals(true, jsonLogic.apply("{\"equals\": [1, 1]}", null));
+assertEquals(true, jsonLogic.apply("{\"equals\": [1, 1]}", null));
+assertEquals(true, jsonLogic.apply("{\"equals\": [[], false]}", null));
+assertEquals(true, jsonLogic.apply("{\"equals\": [\" \", 0]}", null));
+```
+
 There is a `truthy` static method that mimics the truthy-ness rules of Javascript:
 
 ```java
